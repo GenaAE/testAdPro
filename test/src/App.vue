@@ -2,12 +2,11 @@
   <div>
     <h1>Привет</h1>
     <div>
-      <button type="button" class="btn">OPPA</button>
       <select-pro v-model="selectedPro" :options="sortOptions" />
-      <project-form @create="createPost" />
+      <project-form v-model="searchQuery" />
     </div>
-    <button @click="fetchProjects" type="button">Give me projects</button>
-    <projects-list :projects="projects" v-if="!isProjectsLoading" />
+
+    <projects-list :projects="forSearch" v-if="!isProjectsLoading" />
     <div v-else>
       <semipolar-spinner
         :animation-duration="2000"
@@ -40,8 +39,9 @@ export default {
       selectedPro: '',
       sortOptions: [
         { value: 'status', name: 'По статусу' },
-        { value: 'title', name: 'По названию' },
+        // { value: 'title', name: 'По названию' },
       ],
+      searchQuery: '',
     };
   },
   methods: {
@@ -59,32 +59,36 @@ export default {
         alert('problems');
       }
     },
-    // ?
-    createPost(projects) {
-      console.log(projects);
-      this.posts.push(projects); //добавление нового поста в массив posts
-    },
   },
   mounted() {
     this.fetchProjects();
   },
 
-  //   computed: {
-  //     sortedProjects() {
-  //     return [...this.project].sort((pro1, pro2) => {
-  //         pro1[this.selectedPro]?.localeCompare(pro2[this.selectedPro]);
-  //         },
-  //             },
-  //         },
-
-  watch: {
-    selectedPro(newValue) {
-      console.log(newValue);
-      this.projects.sort((pro1, pro2) => {
-        return pro1[newValue]?.localeCompare(pro2[newValue]);
+  computed: {
+    sortedProjects() {
+      return [...this.projects].sort((pro1, pro2) => {
+        return pro1[this.selectedPro]?.localeCompare(pro2[this.selectedPro]);
       });
     },
+    forSearch() {
+      return this.sortedProjects.filter((post) =>
+        post.title.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    },
   },
+
+  //   watch: {
+  //     selectedPro() {
+  //       this.projects.sort((pro1, pro2) => {
+  //         return pro1[this.selectedPro]?.localeCompare(pro2[this.selectedPro]);
+  //       });
+  //     },
+  //     forSearch() {
+  //       return this.selectedPro?.filter((proj) =>
+  //         proj.title.includes(this.searchQuery)
+  //       );
+  //     },
+  //   },
 };
 </script>
 

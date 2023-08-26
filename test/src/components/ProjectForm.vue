@@ -19,14 +19,14 @@ export default {
     };
   },
   methods: {},
-  watch: {
-    projects: {
-      handler(newVal) {
-        console.log(newVal);
-      },
-      deep: true,
-    },
-  },
+  //   watch: {
+  //     projects: {
+  //       handler(newVal) {
+  //         console.log(newVal);
+  //       },
+  //       deep: true,
+  //     },
+  //   },
 };
 </script>
 
