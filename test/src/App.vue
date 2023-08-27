@@ -3,7 +3,9 @@
     <h1>Привет</h1>
     <div>
       <select-pro v-model="selectedPro" :options="sortOptions" />
-      <project-form v-model="searchQuery" />
+      <!-- <project-form v-model="searchQuery" /> не работет изза передачи модели-->
+      <!-- работает норм -->
+      <input-pro v-model="searchQuery" />
     </div>
 
     <projects-list :projects="forSearch" v-if="!isProjectsLoading" />
@@ -24,24 +26,26 @@ import axios from 'axios';
 import ProjectsList from './components/ProjectsList.vue';
 import SemipolarSpinner from './assets/SpinerLoading.vue';
 import SelectPro from './assets/SelectPro.vue';
-import ProjectForm from './components/ProjectForm.vue';
+// import ProjectForm from './components/ProjectForm.vue';
+import InputPro from './assets/InputPro.vue';
 export default {
   components: {
     ProjectsList,
     SemipolarSpinner,
     SelectPro,
-    ProjectForm,
+    // ProjectForm,
+    InputPro,
   },
   data() {
     return {
       projects: [],
       isProjectsLoading: false,
       selectedPro: '',
+      searchQuery: '',
       sortOptions: [
         { value: 'status', name: 'По статусу' },
-        // { value: 'title', name: 'По названию' },
+        { value: 'title', name: 'По названию' },
       ],
-      searchQuery: '',
     };
   },
   methods: {
@@ -70,6 +74,7 @@ export default {
         return pro1[this.selectedPro]?.localeCompare(pro2[this.selectedPro]);
       });
     },
+    // поиск из input ввода
     forSearch() {
       return this.sortedProjects.filter((post) =>
         post.title.toLowerCase().includes(this.searchQuery.toLowerCase())
